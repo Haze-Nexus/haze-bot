@@ -6,9 +6,6 @@ from database import db
 
 
 class Jogos:
-    @staticmethod
-    async def mensagem_hazium(ctx, quantidade:int, nome_jogo:str):
-        await ctx.send(f"Você gastou `{quantidade} hazium` para poder jogar o `{nome_jogo}`!!")
 
     @staticmethod
     async def pedra_papel_tesoura(ctx, bot):
@@ -50,8 +47,8 @@ class Jogos:
                 texto_extra = "\n*Nada mudou.*"
             else:
                 cor = discord.Color.green()
-                db.alterar_hazium(ctx.author.id, 4)
-                texto_extra = "\n*Ganhou +4 Hazium!* 💰"
+                db.alterar_hazium(ctx.author.id, 2)
+                texto_extra = "\n*Ganhou +2 Hazium!* 💰"
 
             embed = discord.Embed(
                 title="🕹️ Resultado do Desafio",
@@ -69,13 +66,12 @@ class Jogos:
 
     @staticmethod
     async def roleta_russa(ctx):
-        db.alterar_hazium(ctx.author.id, -1)
         tiro = random.randint(1, 6)
         await ctx.send(f"**{ctx.author.display_name}** coloca a arma na cabeça... 🔫")
         await asyncio.sleep(2)
 
         if tiro == 1 or tiro == 5:
-            
+            db.alterar_hazium(ctx.author.id, -1)
             try:
                 await ctx.author.timeout(
                     timedelta(minutes=1), reason="Perdeu na Roleta Russa"
@@ -88,10 +84,10 @@ class Jogos:
                     f"BOOM! 💥 Tu morreu e perdeu os Hazium, mas não consegui te mutar!"
                 )
         else:
-            db.alterar_hazium(ctx.author.id, 3)
+            db.alterar_hazium(ctx.author.id, 1)
             respostas_vitoria = [
-                f"Câmara vazia! {ctx.author.mention} ganhou +3 Hazium por ser corajoso! 💰",
-                f"*Click*... Você sobreviveu! Ganhou +3 Hazium. 🍀",
+                f"Câmara vazia! {ctx.author.mention} ganhou +1 Hazium por ser corajoso! 💰",
+                f"*Click*... Você sobreviveu! Ganhou +1 Hazium. 🍀",
             ]
             await ctx.send(random.choice(respostas_vitoria))
 

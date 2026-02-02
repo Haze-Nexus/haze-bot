@@ -145,14 +145,23 @@ async def chat(ctx, *, mensagem: str):
 @bot.command()
 async def games(ctx, id_jogo: int):
     if id_jogo == 1:
-        await Jogos.mensagem_hazium(ctx, 2, "Pedra, Papel e Tesoura")
         await Jogos.pedra_papel_tesoura(ctx, bot)
     elif id_jogo == 2:
-        await Jogos.mensagem_hazium(ctx, 1, "Roleta Russa")
         await Jogos.roleta_russa(ctx)
     else:
-        await ctx.send("🎮 Jogo inválido! Use `1` para Jokenpô ou `2` para Roleta.")
+        await ctx.send("🎮 Jogo inválido! Use `r!helpG` para descobrir os jogos")
 
+@bot.command()
+async def helpG(ctx):
+    embed = discord.Embed(
+        title="📖 Rift - Todos os Jogos",
+        description=f"Olá {ctx.author.mention}, aqui estão meus jogos:",
+        color=discord.Color.purple(),
+    )
+    embed.add_field(name="🎮 Jokenpo", value="`r!games 1` ", inline=False)
+    embed.add_field(name="💰 Roleta Russa", value="`r!games 2`", inline=False)
+    embed.set_footer(text="Haze Nexus v2.0")
+    await ctx.send(embed=embed)
 
 @bot.command()
 async def help(ctx):
@@ -161,7 +170,8 @@ async def help(ctx):
         description=f"Olá {ctx.author.mention}, aqui estão meus comandos:",
         color=discord.Color.blue(),
     )
-    embed.add_field(name="🎮 Jogos", value="`r!games 1` | `r!games 2`", inline=True)
+    embed.add_field(name="🎮 Jogos", value="`r!games [num]` | `r!helpG`", inline=True)
+
     embed.add_field(name="💰 Economia", value="`r!status` | `r!top`", inline=True)
     embed.add_field(name="🤖 IA", value="`r!chat [texto]`", inline=True)
     embed.add_field(
