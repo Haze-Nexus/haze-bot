@@ -12,7 +12,6 @@ class Jogos:
 
     @staticmethod
     async def pedra_papel_tesoura(ctx, bot):
-        db.alterar_hazium(ctx.author.id, -2)
 
         opcoes = ["pedra", "papel", "tesoura"]
         escolha_bot = random.choice(opcoes)
@@ -43,6 +42,7 @@ class Jogos:
 
             # Lógica de Cores e Recompensas/Castigos
             if "Ganhei" in resultado:
+                db.alterar_hazium(ctx.author.id, -2)
                 cor = discord.Color.red()
                 texto_extra = "\n*Tu perdeu os seus Hazium!* 🤫"
             elif "Empate" in resultado:

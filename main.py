@@ -18,7 +18,6 @@ intents.members = True
 
 bot = commands.Bot(command_prefix="r!", intents=intents, help_command=None)
 
-
 @bot.event
 async def on_ready():
     print(f"🚀 Haze Nexus logado como {bot.user}")
@@ -78,6 +77,27 @@ async def mention(ctx, repeticao: int, membro: discord.Member):
 
 
 # --- COMANDOS DE ECONOMIA ---
+@bot.command()
+@commands.cooldown(1, 5, commands.BucketType.user)  # Evita spam de cliques
+async def receber(ctx):
+    sucesso, tempo_restante = db.resgatar_daily(ctx.author.id)
+
+    if sucesso:
+        embed = discord.Embed(
+            title="💰 Daily Resgatado!",
+            description=f"{ctx.author.mention}, você recebeu **20 Hazium**! Volte amanhã para mais.",
+            color=discord.Color.green(),
+        )
+        await ctx.send(embed=embed)
+    else:
+        # Formata o tempo restante de forma bonitinha
+        horas = int(tempo_restante.total_seconds() // 3600) # type: ignore
+        minutos = int((tempo_restante.total_seconds() % 3600) // 60)  # type: ignore
+
+        await ctx.send(
+            f"⏳ Calma aí, guri! Você já resgatou seu prêmio hoje.\n"
+            f"Tente novamente em **{horas}h {minutos}min**."
+        )
 
 
 @bot.command()
@@ -115,9 +135,7 @@ async def top(ctx):
 
     await ctx.send(embed=embed)
 
-
 # --- COMANDOS DE DIVERSÃO ---
-
 
 @bot.command()
 async def chat(ctx, *, mensagem: str):
@@ -147,7 +165,9 @@ async def help(ctx):
     embed.add_field(name="💰 Economia", value="`r!status` | `r!top`", inline=True)
     embed.add_field(name="🤖 IA", value="`r!chat [texto]`", inline=True)
     embed.add_field(
-        name="🛠️ Mod", value="`r!clean [1-100]` | `r!doar [qtd] [user]` | `r!mention [1-15] [user]`", inline=False
+        name="🛠️ Mod",
+        value="`r!clean [1-100]` | `r!doar [user] [qtd]` | `r!receber` | `r!mention [1-15] [user]`",
+        inline=False,
     )
     embed.set_footer(text="Haze Nexus v2.0")
     await ctx.send(embed=embed)
